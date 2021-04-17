@@ -22,6 +22,17 @@ resource "yandex_resourcemanager_folder_iam_binding" "editor" {
   ]
 }
 
+resource "yandex_resourcemanager_folder_iam_binding" "puller" {
+  folder_id = var.yc_folder_id
+  role = "container-registry.images.puller"
+  members = [
+    "serviceAccount:${yandex_iam_service_account.docker-registry.id}",
+  ]
+  depends_on = [
+    yandex_iam_service_account.docker-registry
+  ]
+}
+
 resource "yandex_resourcemanager_folder_iam_binding" "pusher" {
   folder_id = var.yc_folder_id
 

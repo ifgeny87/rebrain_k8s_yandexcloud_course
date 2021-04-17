@@ -1,0 +1,5 @@
+# Берем эти данные из `yc config list`
+yc_token = "..."
+yc_cloud_id = "..."
+yc_folder_id = "..."
+ssh_public_cert = "ssh-rsa ... user@hostname"

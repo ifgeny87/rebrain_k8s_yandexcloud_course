@@ -1,13 +1,13 @@
 # Создаем кластер кубернетес
-resource "yandex_kubernetes_cluster" "kub-test" {
+resource "yandex_kubernetes_cluster" "kuber-cluster" {
   # Указываем его имя
   name        = "kub-test"
 
   # Указываем, к какой сети он будет подключен
   network_id = yandex_vpc_network.internal.id
 
-  # Указываем, что мастера располагаются в регионе ru-central и какие subnets использовать для каждой зоны
   master {
+    # Указываем, в какой зоне располагаются мастера
     zonal {
       zone      = yandex_vpc_subnet.internal-b.zone
       subnet_id = yandex_vpc_subnet.internal-b.id
@@ -18,26 +18,29 @@ resource "yandex_kubernetes_cluster" "kub-test" {
 
     # Назначаем внешний ip master нодам, чтобы мы могли подключаться к ним извне
     public_ip = true
+
+    maintenance_policy {
+      auto_upgrade = true
+    }
   }
 
   # Указываем канал обновлений
   release_channel = "RAPID"
 
-  # Какя-то хрень, наверное, это политика сети
   network_policy_provider = "CALICO"
 
-  # Указываем сервисный аккаунт, который будут использовать ноды, и кластер для управления нодами
+  # Указываем сервисные аккаунты, которые будут использовать ноды и кластер для управления нодами
   node_service_account_id = yandex_iam_service_account.docker-registry.id
   service_account_id      = yandex_iam_service_account.instances-editor.id
 }
-
+/*
 # Создаем группу узлов
-resource "yandex_kubernetes_node_group" "test-group-auto" {
+resource "yandex_kubernetes_node_group" "node-group" {
   # Указываем, к какому кластеру они принадлежат
-  cluster_id  = yandex_kubernetes_cluster.kub-test.id
+  cluster_id  = yandex_kubernetes_cluster.kuber-cluster.id
   # Указываем название группы узлов
   name        = "test-group-auto"
-  # И версию
+  # И версию kubelet
   version     = "1.18"
 
   # Настраиваем шаблон виртуальной машины
@@ -57,12 +60,13 @@ resource "yandex_kubernetes_node_group" "test-group-auto" {
     }
 
     scheduling_policy {
+      # Является ли ВМ прерываемой
       preemptible = false
     }
   }
 
-  # Настраиваем политику масштабирования — в данном случае у нас группа фиксирована и в ней находятся 2 узла
   scale_policy {
+    # Политика автомасштабирования
     auto_scale {
       initial = 2
       min = 2
@@ -70,7 +74,7 @@ resource "yandex_kubernetes_node_group" "test-group-auto" {
     }
   }
 
-  # В каких зонах можно создавать машинки — указываем все зоны
+  # В каких зонах можно создавать машинки
   allocation_policy {
     location {
       zone = "ru-central1-b"
@@ -79,7 +83,10 @@ resource "yandex_kubernetes_node_group" "test-group-auto" {
 
   # Отключаем автоматический апгрейд
   maintenance_policy {
+    # Отключаем автоматический апгрейд
     auto_upgrade = false
+    # Включаем автоматическое восстановление нод в случае проблем
     auto_repair  = true
   }
 }
+*/
