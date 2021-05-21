@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: front
+  namespace: default
+spec:
+  rules:
+    - host: kufront.d87.ru
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: nginx-front
+              servicePort: 80
+          - path: /back
+            backend:
+              serviceName: nginx-back
+              servicePort: 80

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  volumes:
+    - name: volume-data
+      persistentVolumeClaim:
+        claimName: pvc-html
+  containers:
+    - name: nginx
+      image: nginx
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 100m
+          memory: 128Mi
+      envFrom:
+        - secretRef:
+            name: nginx-env
+      volumeMounts:
+        - name: volume-data
+          mountPath: /user/share/nginx/html

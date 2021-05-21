@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-auth
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/auth-type: "basic"
+    nginx.ingress.kubernetes.io/auth-secret: "basic-auth"
+    nginx.ingress.kubernetes.io/auth-secret-type: "auth-file"
+spec:
+  rules:
+    - host: kuback.d87.ru
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: nginx-back
+              servicePort: 80
+          - path: /front
+            backend:
+              serviceName: nginx-front
+              servicePort: 80
