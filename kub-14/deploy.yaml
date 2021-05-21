@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-mf
+  annotations:
+    prometheus.io/scrape: "true"
+  labels:
+    env: prod
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        # Health checking by pod's TCP port
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+            httpHeaders:
+            - name: X-Custom-Header
+              value: Awesome
+          # When first start
+          initialDelaySeconds: 3
+          # Periodic test
+          periodSeconds: 3
+        # Health check by terminal
+        readinessProbe:
+          exec:
+            command:
+              - curl
+              - http://127.0.0.1:80
+          initialDelaySeconds: 5
+          periodSeconds: 5

@@ -1,0 +1,6 @@
+test
+config
+file
+key=value
+[ini]
+name = Alex
