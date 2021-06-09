@@ -1,0 +1,9 @@
+kubectl delete crd certificaterequests.cert-manager.io certificates.cert-manager.io challenges.acme.cert-manager.io clusterissuers.cert-manager.io issuers.cert-manager.io orders.acme.cert-manager.io
+kubectl delete clusterrole cert-manager-cainjector cert-manager-controller-certificates cert-manager-controller-challenges cert-manager-controller-clusterissuers cert-manager-controller-ingress-shim cert-manager-controller-issuers cert-manager-controller-orders cert-manager-edit cert-manager-view
+kubectl delete clusterrolebinding cert-manager-cainjector cert-manager-controller-certificates cert-manager-controller-challenges cert-manager-controller-clusterissuers cert-manager-controller-ingress-shim cert-manager-controller-issuers cert-manager-controller-orders
+kubectl delete role cert-manager-webhook:dynamic-serving -n cert-manager
+kubectl -n kube-system delete role cert-manager-cainjector:leaderelection cert-manager:leaderelection
+kubectl -n cert-manager delete rolebinding cert-manager-webhook:dynamic-serving
+kubectl -n kube-system delete rolebinding cert-manager-cainjector:leaderelection cert-manager:leaderelection
+kubectl delete MutatingWebhookConfiguration cert-manager-webhook
+kubectl delete ValidatingWebhookConfiguration cert-manager-webhook
