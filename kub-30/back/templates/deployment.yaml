@@ -33,6 +33,9 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PG_SQL_URI_TEST
+              value: "{{ .Values.secret_data.pgsql_uri }}"
           ports:
             - name: http
               containerPort: 80
