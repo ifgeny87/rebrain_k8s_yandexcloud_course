@@ -1,0 +1,6 @@
+.idea
+vendor/
+/whoami
+
+# Keys
+.sa-key.json

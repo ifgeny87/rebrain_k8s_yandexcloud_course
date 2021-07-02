@@ -1,0 +1,14 @@
+image:
+  repository: cr.yandex/crp9ml33lcmhso367shh/hello-kitty
+
+ingress:
+  enabled: true
+  hosts:
+    - host: hello-kitty-prod.d87.ru
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: back-cert
+      hosts:
+        - hello-kitty-prod.d87.ru
